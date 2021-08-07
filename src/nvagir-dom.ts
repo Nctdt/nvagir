@@ -57,7 +57,7 @@ export function html(
       add = `"${i}"`
     }
     if (c instanceof Node) {
-      values[i] = [c]
+      c = values[i] = [c]
     }
     if (getType(c) === 'Array') {
       add = `<div n@dom="${i}"></div>`

@@ -1,5 +1,5 @@
 export function getType(data: any) {
-  let str = Object.prototype.toString.call([])
+  let str = Object.prototype.toString.call(data)
   str = str.substring(8, str.length - 1)
   return str
 }
