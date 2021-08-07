@@ -1,6 +1,6 @@
 {
   "name": "nvagir",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "simple html",
   "main": "lib/nvagir.js",
   "scripts": {
