@@ -5,7 +5,7 @@
   "main": "lib/nvagir.js",
   "scripts": {
     "build": "tsc --build",
-    "publish": "tsc --build && npm publish"
+    "prepublish": "tsc --build"
   },
   "keywords": [
     "html",
