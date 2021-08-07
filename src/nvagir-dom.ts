@@ -1,4 +1,5 @@
 import { v4 } from 'uuid'
+import { getType, littleHump } from './utils'
 
 export type Component<P extends Record<string, unknown> = {}> = (
   props: P,
@@ -19,10 +20,6 @@ type Command = {
   event: keyof DocumentEventMap | '' | 'dom'
 }
 
-function littleHump(arg: string) {
-  return arg.replace(/-([a-z])/g, (_, little: string) => little.toUpperCase())
-}
-
 function bindEvent(
   body: HTMLElement,
   commands: Command[],
@@ -37,7 +34,7 @@ function bindEvent(
     const target = values[valueId]
     switch (event) {
       case 'dom':
-        dom.replaceWith(target as HTMLElement)
+        dom.replaceWith(...(target as HTMLElement[]))
         return false
       default:
         dom.addEventListener(event, target as EventListener)
@@ -60,8 +57,12 @@ export function html(
       add = `"${i}"`
     }
     if (c instanceof Node) {
+      values[i] = [c]
+    }
+    if (getType(c) === 'Array') {
       add = `<div n@dom="${i}"></div>`
     }
+
     return p + add + templates[i + 1]
   }, templates[0])
   domStr = domStr.replace(/n@([a-z]*)(?=\>|\s|\/|\=)/g, (_, event = '') => {
@@ -72,7 +73,6 @@ export function html(
     })
     return id
   })
-  console.log('replaced', commands)
 
   const parserDocument = parser.parseFromString(domStr, 'text/html')
   const doms = bindEvent(parserDocument.body, commands, values)
