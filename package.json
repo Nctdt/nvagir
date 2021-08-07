@@ -4,7 +4,8 @@
   "description": "simple html",
   "main": "lib/nvagir.js",
   "scripts": {
-    "build": "tsc --build"
+    "build": "tsc --build",
+    "publish": "tsc --build && npm publish"
   },
   "keywords": [
     "html",
