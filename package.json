@@ -2,7 +2,7 @@
   "name": "nvagir",
   "version": "1.0.7",
   "description": "simple html",
-  "main": "lib/nvagir.js",
+  "main": "lib/index.js",
   "scripts": {
     "build": "tsc --build",
     "prepublish": "tsc --build"
