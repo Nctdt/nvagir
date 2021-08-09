@@ -4,8 +4,8 @@
   "description": "simple html",
   "main": "lib/index.js",
   "scripts": {
-    "build": "tsc --build",
-    "prepublish": "tsc --build"
+    "build": "tsc --build --clean && tsc --build",
+    "prepublish": "tsc --build --clean && tsc --build"
   },
   "keywords": [
     "html",

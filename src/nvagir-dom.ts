@@ -17,34 +17,39 @@ type TemplateValues = (
 
 type Command = {
   id: string
-  event: keyof DocumentEventMap | '' | 'dom'
+  event: keyof DocumentEventMap | 'name' | 'dom'
 }
 
-function bindEvent(
+function bindEvent<T extends Record<string, HTMLElement>>(
   body: HTMLElement,
   commands: Command[],
   values: TemplateValues,
 ) {
-  const doms = commands.map(({ id, event }) => {
+  const doms = commands.reduce((p, { id, event }) => {
     const dom = body.querySelector(`[${id}]`)! as HTMLElement
-    if (event === '') return dom
-
     const dataId = id.replace('data-', '')
-    const valueId = +dom.dataset[littleHump(dataId)]!
-    const target = values[valueId]
+    const dataVal = dom.dataset[littleHump(dataId)]
+
+    if (!dataVal) return p
+    const target = values[+dataVal]
+
     switch (event) {
+      case 'name':
+        p[dataVal] = dom
+        break
       case 'dom':
         dom.replaceWith(...(target as HTMLElement[]))
-        return false
+        break
       default:
         dom.addEventListener(event, target as EventListener)
-        return dom
+        break
     }
-  })
-  return doms.filter(v => v) as HTMLElement[]
+    return p
+  }, {} as Record<string, HTMLElement>)
+  return doms as T
 }
 
-export function html(
+export function html<T extends Record<string, HTMLElement>>(
   templates: TemplateStringsArray,
   ...values: TemplateValues
 ) {
@@ -75,7 +80,7 @@ export function html(
   })
 
   const parserDocument = parser.parseFromString(domStr, 'text/html')
-  const doms = bindEvent(parserDocument.body, commands, values)
+  const doms = bindEvent<T>(parserDocument.body, commands, values)
   return {
     el: parserDocument.body.children[0] as HTMLElement,
     doms,
