@@ -1,3 +1,6 @@
+export * from './nvagir-dom'
+export * from './typings/nvagir-element'
+
 export function reactive<T extends Record<string, unknown>>(
   data: T,
   reactiveFc: (p: keyof T, data: T) => void,
@@ -11,5 +14,3 @@ export function reactive<T extends Record<string, unknown>>(
   })
   return proxyData
 }
-
-export * from './nvagir-dom'
