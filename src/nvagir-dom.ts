@@ -67,24 +67,29 @@ function bindEvent<
           p.doms[dataVal] = dom
           break
         case 'dom':
-          if (isNEArr(target) || isNE(target)) {
-            let curr = target
-            if (isNE(curr)) curr = [curr]
-
+          if (isNEArr(target)) {
             dom.replaceWith(
-              ...curr.map(v => {
+              ...target.map(v => {
                 const {
                   el: { dom },
                   name,
                 } = v
-                if (isNE(target)) {
-                  p.components[name] = v
-                } else if (isNEArr(target)) {
-                  p.components[name] = curr
+                p.components[name] ??= []
+                const curr = p.components[name]
+                if (isNEArr(curr) && isNEArr(target)) {
+                  curr.push(...target)
                 }
+
                 return dom
               }),
             )
+          } else if (isNE(target)) {
+            const {
+              el: { dom },
+              name,
+            } = target
+            p.components[name] = target
+            dom.replaceWith(dom)
           }
           return p
           break
