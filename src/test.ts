@@ -1,5 +1,5 @@
-import { html, Component, reactive } from './nvagir'
-import { DAMNE, DNE, PageComponent } from './typings/nvagir-element'
+import { html, reactive } from './nvagir'
+import { DAMNE, DNE, MNE, PageComponent } from './typings/nvagir-element'
 
 type SonData = {
   text: string
@@ -28,8 +28,19 @@ const Son = () => {
     el,
     proxyData,
     methods,
-  } as DAMNE<'son', SonData, typeof methods>
+  } as DAMNE<
+    'son',
+    {
+      text: string
+    },
+    {
+      setText(text: string): void
+    }
+  >
 }
+type S = () => DAMNE<'son', { text: string }, { setText(text: string): void }>
+type SA = () => DNE<'SonA', { text: string }>
+type SC = () => MNE<'SonC', { setText(text: string): void }>
 
 const test: PageComponent = () => {
   const btnClickUseProxyData = () => {
@@ -37,14 +48,14 @@ const test: PageComponent = () => {
     doms.text.value = ''
   }
   const btnClickUseMethods = () => {
-    components.son.methods.setText(doms.text.value)
-    doms.text.value = ''
+    // components.son.
   }
+  type a = typeof components
   const { el, doms, components } = html<
     {
       text: HTMLInputElement
     },
-    [typeof Son]
+    [S, SA[], SC[]]
   >`
     <div>
       <input n@name="text" />
