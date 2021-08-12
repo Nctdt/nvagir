@@ -13,7 +13,7 @@ export type NvagirElement<N extends string = string> = {
 }
 export type NE<N extends string = string> = NvagirElement<N>
 export function isNE(item: unknown): item is NE {
-  return (item as NvagirElement)?.el.sign === sign
+  return (item as NvagirElement)?.el?.sign === sign
 }
 export function isNEArr(item: unknown): item is NE[] {
   if (getType(item) !== 'Array') return false
