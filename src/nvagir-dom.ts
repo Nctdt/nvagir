@@ -84,12 +84,9 @@ function bindEvent<
               }),
             )
           } else if (isNE(target)) {
-            const {
-              el: { dom },
-              name,
-            } = target
+            const { el, name } = target
             p.components[name] = target
-            dom.replaceWith(dom)
+            dom.replaceWith(el.dom)
           }
           return p
           break
