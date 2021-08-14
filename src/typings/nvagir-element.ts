@@ -1,5 +1,3 @@
-import { getType } from '../utils'
-
 export const sign = Symbol('nvagirComponent')
 
 export interface NvagirEl {
@@ -12,14 +10,8 @@ export type NvagirElement<N extends string = string> = {
   el: NvagirEl
 }
 export type NE<N extends string = string> = NvagirElement<N>
-export function isNE(item: unknown): item is NE {
-  return (item as NvagirElement)?.el?.sign === sign
-}
-export function isNEArr(item: unknown): item is NE[] {
-  if (getType(item) !== 'Array') return false
-  return (item as unknown[]).every(v => isNE(v))
-}
 
+export type Component<N extends string = string> = (...args: any) => NE<N>
 export type PageNvagirElement = Omit<NvagirElement, 'name'>
 export type PageComponent = () => PageNvagirElement
 

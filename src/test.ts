@@ -1,11 +1,11 @@
-import { html, reactive } from './nvagir'
+import { html, reactive, render, renderMaps } from './nvagir'
 import { DAMNE, DNE, MNE, PageComponent } from './typings/nvagir-element'
 
 type SonData = {
   text: string
 }
 
-const Son = () => {
+const Son = (a: string) => {
   const data: SonData = {
     text: '',
   }
@@ -39,8 +39,9 @@ const Son = () => {
   >
 }
 type S = () => DAMNE<'son', { text: string }, { setText(text: string): void }>
-type SA = () => DNE<'SonA', { text: string }>
+type SA = (s: string, a: number) => DNE<'SonA', { text: string }>
 type SC = () => MNE<'SonC', { setText(text: string): void }>
+declare const Sa: SA
 
 const test: PageComponent = () => {
   const btnClickUseProxyData = () => {
@@ -61,13 +62,14 @@ const test: PageComponent = () => {
       <input n@name="text" />
       <button n@click=${btnClickUseProxyData}>设置子元素proxyData</button>
       <button n@click=${btnClickUseMethods}>使用子元素methods.setText</button>
-      ${Son()}
+      ${Son('')}
     </div>
   `
   console.log('el: ', el)
   console.log('doms: ', doms)
   console.log('components: ', components)
-
+  render(Son, components, '123')
+  renderMaps(Sa, components, ['123', 123], ['123', 123])
   return {
     el,
   }

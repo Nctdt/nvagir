@@ -1,34 +1,28 @@
 import { v4 } from 'uuid'
 
 import {
+  Component,
   DAMNE,
   DNE,
-  isNE,
-  isNEArr,
   MNE,
   NE,
   NvagirEl,
   sign,
 } from './typings/nvagir-element'
+import { GetName, isNE, isNEArr, NEReturnType } from './typings/types-utils'
+
 import { littleHump } from './utils'
-
-type Component<N extends string = string> = (...args: any) => NE<N>
-
-type MyReturnType<T extends Component> = T extends (...args: any) => infer R
-  ? R
-  : NE
-type GetName<T> = T extends NE<infer N> ? N : never
 
 type GetTupleReturnNE<C extends ReadonlyArray<Component | Component[]> = []> = {
   [K in keyof C]: C[K] extends (infer A)[]
     ? A extends Component
-      ? MyReturnType<A>[]
+      ? NEReturnType<A>[]
       : NE
     : C[K] extends Component
-    ? MyReturnType<C[K]>
+    ? NEReturnType<C[K]>
     : NE
 }
-type Tuple2UnionNE<
+type TupleMap2NE<
   C extends ReadonlyArray<Component | Component[]>,
   R extends GetTupleReturnNE<C> = GetTupleReturnNE<C>,
 > = {
@@ -76,10 +70,8 @@ function bindEvent<
                 } = v
                 p.components[name] ??= []
                 const curr = p.components[name]
-                if (isNEArr(curr) && isNEArr(target)) {
-                  curr.push(...target)
-                }
-
+                if (isNEArr(curr) && isNEArr(target)) 
+                  curr.push(v)
                 return dom
               }),
             )
@@ -113,7 +105,7 @@ export function html<
 ): {
   el: NvagirEl
   doms: T
-  components: Tuple2UnionNE<C>
+  components: TupleMap2NE<C>
 } {
   const parser = new DOMParser()
   const commands: Command[] = []
@@ -141,7 +133,7 @@ export function html<
   })
 
   const parserDocument = parser.parseFromString(domStr, 'text/html')
-  const { doms, components } = bindEvent<T, Tuple2UnionNE<C>>(
+  const { doms, components } = bindEvent<T, TupleMap2NE<C>>(
     parserDocument.body,
     commands,
     values,
