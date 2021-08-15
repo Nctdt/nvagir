@@ -3,6 +3,13 @@ import { Component, NE } from './typings/nvagir-element'
 export * from './typings/nvagir-element'
 export * from './nvagir-dom'
 
+/**
+ * react to data changes
+ * @template T data type
+ * @param data will proxy data
+ * @param reactiveFc when the proxy data changes, will call `reactiveFc(changePropName, changedData)`.
+ * @return proxy data
+ */
 export function reactive<T extends Record<string, unknown>>(
   data: T,
   reactiveFc: (p: keyof T, data: T) => void,
@@ -17,13 +24,23 @@ export function reactive<T extends Record<string, unknown>>(
   return proxyData
 }
 
+/**
+ * re-render child component utility method
+ * @template C child component type
+ * @template N child component return type
+ * @param target will render place
+ * @param childComponent will re-render child component
+ * @param components make the corresponding attribute of `components` point to the new component
+ * @param prop child component props
+ * @return DOM element rendered on the page
+ */
 export function render<C extends Component, N extends ReturnType<C>>(
   target: HTMLElement,
-  c: C,
+  childComponent: C,
   components: Record<N['name'], NE>,
   ...prop: Parameters<C>
 ) {
-  const component = c.apply(null, prop)
+  const component = childComponent.apply(null, prop)
   components[component.name as N['name']] = component
   const {
     el: { dom },
@@ -34,6 +51,16 @@ export function render<C extends Component, N extends ReturnType<C>>(
   return dom
 }
 
+/**
+ * re-render several child components utility method
+ * @template C child component type
+ * @template N child component return type
+ * @param target will render place
+ * @param childComponent will re-render child component
+ * @param components make the corresponding attribute of `components` point to the new components
+ * @param props child component props
+ * @return DOM elements rendered on the page
+ */
 export function renderMaps<C extends Component, N extends ReturnType<C>>(
   target: HTMLElement,
   c: C,

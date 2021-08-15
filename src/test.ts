@@ -44,7 +44,7 @@ type SC = () => MNE<'SonC', { setText(text: string): void }>
 declare const Sa: SA
 
 const test: PageComponent = () => {
-  const btnClickUseProxyData = () => {
+  const btnClickUseProxyData = (ev: MouseEvent) => {
     components.son.proxyData.text = doms.text.value
     doms.text.value = ''
   }
@@ -55,6 +55,7 @@ const test: PageComponent = () => {
   const { el, doms, components } = html<
     {
       text: HTMLInputElement
+      sonBox: HTMLElement
     },
     [S, SA[], SC[]]
   >`
@@ -62,14 +63,9 @@ const test: PageComponent = () => {
       <input n@name="text" />
       <button n@click=${btnClickUseProxyData}>设置子元素proxyData</button>
       <button n@click=${btnClickUseMethods}>使用子元素methods.setText</button>
-      ${Son('')}
+      <div n@name="sonBox">${Son('')}</div>
     </div>
   `
-  console.log('el: ', el)
-  console.log('doms: ', doms)
-  console.log('components: ', components)
-  render(Son, components, '123')
-  renderMaps(Sa, components, ['123', 123], ['123', 123])
   return {
     el,
   }

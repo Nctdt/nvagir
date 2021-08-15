@@ -37,7 +37,7 @@ type TupleMap2NE<
 // type SC = () => MNE<'SonC', { setText(text: string): void }>
 // type R = Tuple2UnionNE<[S, SA[], SC[]]>
 
-type TemplateValues = (string | number | EventListener | NE | NE[])[]
+type TemplateValues = (string | number | ((ev: any) => void) | NE | NE[])[]
 
 type Command = {
   id: string
@@ -70,8 +70,7 @@ function bindEvent<
                 } = v
                 p.components[name] ??= []
                 const curr = p.components[name]
-                if (isNEArr(curr) && isNEArr(target)) 
-                  curr.push(v)
+                if (isNEArr(curr) && isNEArr(target)) curr.push(v)
                 return dom
               }),
             )
